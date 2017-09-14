@@ -60,9 +60,12 @@ class Table
         values = @table.by_col[value_field]
         Hash[*keys.zip(values).flatten]
     end
-    def make_set value_field
-        values = @table.by_col[value_field]
-        values.uniq        
+    def make_set *value_fields
+        each_row{|row|
+            value_fields.map{|field| row[field]}
+        }.map{|set|
+            value_fields.length == 1 ? set.shift : set
+        }.uniq
     end
 
     private
