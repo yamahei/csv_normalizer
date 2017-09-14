@@ -5,7 +5,7 @@ class Table
     def initialize option={}
         #option
         @hashead = option[:hashead] || true
-        @excludes = option[:excludes] || []
+        @excludes = option[:excludes] || [] #ATTENTION: not work??
         _encoding = option[:encoding] || Encoding.default_external
         #init
         Encoding.default_external = _encoding
@@ -42,6 +42,8 @@ class Table
             file.write(_generate(write_head))
         end
     end
+
+
     def new_col colname
         @table.by_col[colname] = @table.by_row.map{|row| yield row }
     end
@@ -50,6 +52,17 @@ class Table
     end
     def each_row
         @table = @table.by_row.each{|row| yield(row) }
+    end
+
+
+    def make_hash key_field, value_field
+        keys = @table.by_col[key_field]
+        values = @table.by_col[value_field]
+        Hash[*keys.zip(values).flatten]
+    end
+    def make_set value_field
+        values = @table.by_col[value_field]
+        values.uniq        
     end
 
     private
