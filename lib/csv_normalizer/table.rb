@@ -51,7 +51,7 @@ class Table
         @table = @table.by_row.delete_if{|row| yield(row) }
     end
     def each_row
-        @table = @table.by_row.each{|row| yield(row) }
+        @table.by_row.each{|row| yield(row) }
     end
 
 
