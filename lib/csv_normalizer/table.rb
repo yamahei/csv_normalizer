@@ -61,9 +61,11 @@ class Table
         Hash[*keys.zip(values).flatten]
     end
     def make_set *value_fields
+        rows = []
         each_row{|row|
-            value_fields.map{|field| row[field]}
-        }.map{|set|
+            rows.push value_fields.map{|field| row[field]}
+        }
+        rows.map{|set|
             value_fields.length == 1 ? set.shift : set
         }.uniq
     end
