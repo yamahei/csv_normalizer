@@ -1,7 +1,7 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "csv_normalizer/version"
+require "csv_normalizer"
 
 Gem::Specification.new do |spec|
   spec.name          = "csv_normalizer"

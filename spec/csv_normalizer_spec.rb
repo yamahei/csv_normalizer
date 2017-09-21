@@ -22,5 +22,35 @@ RSpec.describe CsvNormalizer do
     t.load CSV_PATH
     expect(t.class).to eq(CsvNormalizer::Table)
   end
-  
+
+  it "new_col method." do
+    t = CsvNormalizer.load_to_table CSV_PATH, {
+      :excludes => [:no, :name, :age, :sex]
+    }
+    t.new_col(:disp){|row|
+      "#{row[:name]}(#{row[:age]})"
+    }
+    expect = [
+      "disp",
+      "taro(10)",
+      "jiro(9)",
+      "sabu()",
+      "yoshiko(4)",
+      "goro(2)",
+      ""
+    ].join("\n")
+    expect(t.to_s).to eq(expect)
+  end
+
+  it "delete_row method." do
+    t = CsvNormalizer.load_to_table CSV_PATH, {
+      :excludes => [:no, :age, :sex]
+    }
+    t.delete_row{|row|
+      ["male", "female"].include? row[:sex]
+    }
+    expect = "name\nsabu\n"
+    expect(t.to_s).to eq(expect)
+  end
+
 end

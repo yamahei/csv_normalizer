@@ -39,8 +39,19 @@ class Table
 
     def save filepath, write_head=true
         File.open(filepath, 'w') do |file|
-            file.write(_generate(write_head))
+            file.write(to_s(write_head))
         end
+    end
+    def to_s write_head=true
+        _table = @table.by_col
+        _head = _table.headers - @excludes
+        CSV.generate {|csv|
+            csv << _head if write_head
+            _table.by_row.each{|row|
+                _row = row.fields(*_head)
+                csv << _row
+            }
+        }
     end
 
 
@@ -68,20 +79,6 @@ class Table
         rows.map{|set|
             value_fields.length == 1 ? set.shift : set
         }.uniq
-    end
-
-    private
-
-    def _generate write_head=true
-        _table = @table.by_col
-        _head = _table.headers - @excludes
-        return CSV.generate {|csv|
-            csv << _head if write_head
-            _table.by_row.each{|row|
-                _row = row.fields(*_head)
-                csv << _row
-            }
-        }
     end
 
 end#class
